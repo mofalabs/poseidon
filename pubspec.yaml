@@ -1,10 +1,10 @@
 name: poseidon
-description: A new Flutter project.
+description: poseidon dart code.
 version: 0.0.1
-homepage:
+homepage: https://github.com/mofalabs/poseidon
 
 environment:
-  sdk: '>=3.1.4 <4.0.0'
+  sdk: ">=2.18.0 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
