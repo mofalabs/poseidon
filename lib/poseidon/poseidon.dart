@@ -25,12 +25,12 @@ BigInt pow5(BigInt v) {
   return (v * o * o) % F;
 }
 
-List<BigInt> mix(List<BigInt> state, List<List<String>> M) {
+List<BigInt> mix(List<BigInt> state, List<List<BigInt>> M) {
   List<BigInt> out = [];
   for (int x = 0; x < state.length; x++) {
     BigInt o = BigInt.zero;
     for (int y = 0; y < state.length; y++) {
-      o = o + BigInt.parse(M[x][y]) * state[y];
+      o = o + M[x][y] * state[y];
     }
     out.add(o % F);
   }
@@ -50,8 +50,10 @@ BigInt poseidon(List<BigInt> _inputs, Map<String, dynamic> opt) {
   const nRoundsF = 8;
   final nRoundsP = N_ROUNDS_P[t - 2];
 
-  final List<String> C = opt['C'];
-  final List<List<String>> M = opt['M'];
+  final List<BigInt> C = (opt['C'] as List).map((e) => e as BigInt).toList();
+  final List<List<BigInt>> M = (opt['M'] as List)
+      .map((value) => (value as List).map((e) => e as BigInt).toList())
+      .toList();
 
   if (M.length != t) {
     throw ArgumentError(
@@ -61,7 +63,7 @@ BigInt poseidon(List<BigInt> _inputs, Map<String, dynamic> opt) {
   List<BigInt> state = [BigInt.zero, ...inputs];
   for (int x = 0; x < nRoundsF + nRoundsP; x++) {
     for (int y = 0; y < state.length; y++) {
-      state[y] = state[y] + BigInt.parse(C[x * t + y]);
+      state[y] = state[y] + C[x * t + y];
       if (x < nRoundsF ~/ 2 || x >= nRoundsF ~/ 2 + nRoundsP) {
         state[y] = pow5(state[y]);
       } else if (y == 0) {
